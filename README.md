@@ -1,10 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Как решить проблему с правами загрузки на git remote
-git remote set-url https://<username>:<password>@github.com/<username>/<repo_name>.git
-Но это работает, если в пароле нет специальных символов типа "@" или ")"
-https://stackoverflow.com/questions/6565357/git-push-requires-username-and-password
+Написать в командной строке: git config --global credential.helper wincred
 
+И в ней же потом писать: npm run deploy
+
+@see https://github.com/tschaub/gh-pages/issues/230
+
+А как это всё делается написано тут: https://reactgo.com/deploy-react-app-github-pages/
 
 ## Available Scripts
 
