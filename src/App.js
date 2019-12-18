@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Component1 from './Component1';
 
@@ -6,19 +6,41 @@ import Component1 from './Component1';
 // p=startTimer();
 // After some time to stop Timing use:  clearInterval(p);
 
-function App() {
-  const [myState, setMyState] = useState({startUnixTime: undefined, currentUnixTime: undefined, timerId: undefined});
-  const timerValue = myState.startUnixTime ? Math.floor((new Date().getTime()-myState.startUnixTime)/1000 + "с") : undefined;
-  return (
-    <div className="App">
-      Я приложение. <br/>
-      У меня есть счётчик: {timerValue} с.
-      <Component1 startTimer={()=>setMyState({
-        startUnixTime: new Date().getTime(),
-        currentUnixTime: new Date().getTime(),
-        timerId: setInterval(()=>{setMyState({...myState, currentUnixTime: new Date().getTime()})},1000)})} />
-    </div>
-  );
+class App extends React.Component {
+  constructor (initialState){
+    super(initialState);
+    this.state={
+      startUnixTime: undefined,
+      currentUnixTime: undefined,
+      timerId: undefined
+    };
+  }
+
+  startTimer(){
+    if (this.state.timerId) clearInterval(this.state.timerId);
+    this.setState({
+      startUnixTime: new Date().getTime(),
+      currentUnixTime: new Date().getTime(),
+      timerId: setInterval(()=>this.setCurrentUnixTime(), 1000)
+    });
+  }
+
+  setCurrentUnixTime(){
+    console.log(this.state);
+    this.setState({...this.state, currentUnixTime: new Date().getTime()});
+  }
+
+  render(){
+    const timerValue = this.state.startUnixTime ? Math.floor((this.state.currentUnixTime - this.state.startUnixTime)/1000) + " c" : undefined;
+    //let timerValue;
+    return (
+      <div className="App">
+        Я приложение. <br/>
+        У меня есть счётчик: {timerValue}
+        <Component1 startTimer={()=>this.startTimer()} />
+      </div>
+    );
+  }
 }
 
 export default App;
