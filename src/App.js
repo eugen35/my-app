@@ -6,41 +6,47 @@ import Component1 from './Component1';
 // p=startTimer();
 // After some time to stop Timing use:  clearInterval(p);
 
-class App extends React.Component {
-  constructor (initialState){
-    super(initialState);
-    this.state={
-      startUnixTime: undefined,
-      currentUnixTime: undefined,
-      timerId: undefined
-    };
-  }
 
-  startTimer(){
-    if (this.state.timerId) clearInterval(this.state.timerId);
-    this.setState({
+
+
+// ВНИМАНИЕ! ТАК НИКОГДА НЕ СРАБОТАЕТ! НУЖНО ЧИТАТЬ reactjs вопросы и ответы, связанные с хуками... Через тернии можно заставить это заработать!!!!!!!!!!
+
+
+
+function App() {
+  const [state, setState] = React.useState({
+    a:1,
+    startUnixTime: undefined,
+    currentUnixTime: undefined,
+    timerId: undefined
+  });
+
+  function startTimer(){
+    if (state.timerId) clearInterval(state.timerId);
+    setState({
+      a:1,
       startUnixTime: new Date().getTime(),
       currentUnixTime: new Date().getTime(),
-      timerId: setInterval(()=>this.setCurrentUnixTime(), 1000)
+      timerId: setInterval(()=>setCurrentUnixTime, 5000)
     });
   }
 
-  setCurrentUnixTime(){
-    console.log(this.state);
-    this.setState({...this.state, currentUnixTime: new Date().getTime()});
+  function setCurrentUnixTime(){
+    console.log(state);
+    setState({...state, currentUnixTime: new Date().getTime()});
   }
 
-  render(){
-    const timerValue = this.state.startUnixTime ? Math.floor((this.state.currentUnixTime - this.state.startUnixTime)/1000) + " c" : undefined;
-    //let timerValue;
-    return (
-      <div className="App">
-        Я приложение. <br/>
-        У меня есть счётчик: {timerValue}
-        <Component1 startTimer={()=>this.startTimer()} />
-      </div>
-    );
-  }
+  const timerValue = state.startUnixTime ? Math.floor((state.currentUnixTime - state.startUnixTime)/1000) + " c" : undefined;
+
+  return (
+    <div className="App">
+      Я приложение. <br/>
+      {JSON.stringify(state)} <br/>
+      У меня есть счётчик: {timerValue}
+      <Component1 startTimer={()=>startTimer()} />
+    </div>
+  );
+
 }
 
 export default App;
